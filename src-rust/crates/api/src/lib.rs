@@ -21,6 +21,11 @@ use tokio::sync::mpsc;
 use tracing::{debug, warn};
 
 // ---------------------------------------------------------------------------
+// Modules
+// ---------------------------------------------------------------------------
+pub mod cch;
+
+// ---------------------------------------------------------------------------
 // Public re-exports
 // ---------------------------------------------------------------------------
 pub use client::AnthropicClient;
@@ -497,8 +502,17 @@ pub mod client {
             let mut attempts = 0u32;
             let mut delay = self.config.initial_retry_delay;
 
+            // Serialize body to JSON string for CCH signing
+            let body_str = serde_json::to_string(body)
+                .map_err(|e| ClaudeError::Api(format!("Failed to serialize request: {}", e)))?;
+            let body_bytes = body_str.as_bytes();
+
             loop {
                 attempts += 1;
+
+                // Compute CCH hash and build billing header
+                let cch_hash = cch::compute_cch(body_bytes);
+                let billing_header = format!("cc_version=0.1; cc_entrypoint=claude_code; {}; cc_workload=claude_code;", cch_hash);
 
                 // Use Bearer auth for Claude.ai OAuth tokens; x-api-key for regular keys.
                 let mut req = self
@@ -507,13 +521,14 @@ pub mod client {
                     .header("anthropic-version", &self.config.api_version)
                     .header("anthropic-beta", &self.config.beta_features)
                     .header("content-type", "application/json")
-                    .header("accept", "text/event-stream");
+                    .header("accept", "text/event-stream")
+                    .header("x-anthropic-billing-header", billing_header);
                 req = if self.config.use_bearer_auth {
                     req.header("Authorization", format!("Bearer {}", &self.config.api_key))
                 } else {
                     req.header("x-api-key", &self.config.api_key)
                 };
-                let req = req.json(body);
+                let req = req.body(body_str.clone());
 
                 let resp = req.send().await.map_err(ClaudeError::Http)?;
                 let status = resp.status().as_u16();

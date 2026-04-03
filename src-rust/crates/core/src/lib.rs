@@ -2644,6 +2644,7 @@ pub mod team_memory_sync;
 pub mod system_prompt;
 pub mod memdir;
 pub mod oauth_config;
+pub mod codex_oauth;
 pub mod migrations;
 pub mod output_styles;
 pub mod feature_gates;

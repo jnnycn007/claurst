@@ -9,6 +9,7 @@
 //    - Interactive REPL mode: full TUI with ratatui
 
 mod oauth_flow;
+mod codex_oauth_flow;
 
 use anyhow::Context;
 use cc_core::{
@@ -16,7 +17,6 @@ use cc_core::{
     constants::{APP_VERSION, DEFAULT_MODEL},
     context::ContextBuilder,
     cost::CostTracker,
-    feature_flags::FeatureFlagManager,
     permissions::{AutoPermissionHandler, InteractivePermissionHandler},
 };
 use async_trait::async_trait;
@@ -613,13 +613,6 @@ async fn main() -> anyhow::Result<()> {
         cron_cancel.clone(),
     );
 
-    // Initialize feature flags from GrowthBook
-    let feature_flags = FeatureFlagManager::new();
-    if let Err(e) = feature_flags.fetch_flags_async().await {
-        debug!("Failed to initialize feature flags: {}", e);
-        // Non-fatal error: continue with defaults
-    }
-
     // --print mode (headless)
     let result = if is_headless {
         run_headless(
@@ -629,7 +622,6 @@ async fn main() -> anyhow::Result<()> {
             tool_ctx,
             query_config,
             cost_tracker,
-            feature_flags,
         )
         .await
     } else {
@@ -643,7 +635,6 @@ async fn main() -> anyhow::Result<()> {
             cost_tracker,
             cli.resume,
             bridge_config,
-            feature_flags,
         )
         .await
     };
@@ -696,7 +687,6 @@ async fn run_headless(
     tool_ctx: ToolContext,
     query_config: cc_query::QueryConfig,
     cost_tracker: Arc<CostTracker>,
-    _feature_flags: FeatureFlagManager,
 ) -> anyhow::Result<()> {
     use cc_query::{QueryEvent, QueryOutcome};
     use tokio::sync::mpsc;
@@ -951,7 +941,6 @@ async fn run_interactive(
     cost_tracker: Arc<CostTracker>,
     resume_id: Option<String>,
     bridge_config: Option<cc_bridge::BridgeConfig>,
-    _feature_flags: FeatureFlagManager,
 ) -> anyhow::Result<()> {
     use cc_commands::{execute_command, CommandContext, CommandResult};
     use cc_bridge::{BridgeOutbound, TuiBridgeEvent};

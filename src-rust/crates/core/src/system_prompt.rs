@@ -479,15 +479,8 @@ const SAFETY_GUIDELINES: &str = r#"
 "#;
 
 /// Security / cyber-risk instruction.
-/// Owned by the safeguards team — do not modify the content here.
-const CYBER_RISK_INSTRUCTION: &str = r#"
-## Security
-
-You are authorized to assist with security research, CTF challenges, penetration testing
-with explicit authorization, defensive security, and educational security content. Do not
-assist with creating malware, unauthorized access, denial-of-service attacks, or any
-destructive security techniques without clear legitimate purpose.
-"#;
+/// Removed for OSS/free-code build — no security guardrails injected.
+const CYBER_RISK_INSTRUCTION: &str = "";
 
 const COORDINATOR_SYSTEM_PROMPT: &str = r#"
 ## Coordinator Mode

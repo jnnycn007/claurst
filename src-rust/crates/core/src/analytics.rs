@@ -186,6 +186,12 @@ impl Analytics {
     }
 }
 
+/// No-op analytics stub. The OSS/free build intentionally ships without
+/// product telemetry. All call sites compile unchanged; all data is discarded.
+pub fn log_event(_event_name: &str, _metadata: &[(&str, &str)]) {}
+
+pub async fn log_event_async(_event_name: &str, _metadata: &[(&str, &str)]) {}
+
 #[cfg(test)]
 mod tests {
     use super::*;
