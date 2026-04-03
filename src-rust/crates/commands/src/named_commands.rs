@@ -977,6 +977,52 @@ impl NamedCommand for StickersCommand {
 }
 
 // ---------------------------------------------------------------------------
+// ultraplan — Agentic planning with extended thinking
+// ---------------------------------------------------------------------------
+
+pub struct UltraplanCommand;
+
+impl NamedCommand for UltraplanCommand {
+    fn name(&self) -> &str { "ultraplan" }
+    fn description(&self) -> &str { "Launch Ultraplan agentic code planner with extended thinking" }
+    fn usage(&self) -> &str { "claude ultraplan [--effort=medium|high|maximum]" }
+
+    fn execute_named(&self, args: &[&str], _ctx: &CommandContext) -> CommandResult {
+        #[cfg(not(feature = "ultraplan"))]
+        {
+            return CommandResult::Error(
+                "Ultraplan is not enabled in this build. Compile with --features ultraplan".to_string(),
+            );
+        }
+
+        // Parse effort level from args
+        let effort = args.iter()
+            .find(|arg| arg.starts_with("--effort="))
+            .and_then(|arg| arg.strip_prefix("--effort="))
+            .unwrap_or("medium");
+
+        // Validate effort level
+        if !matches!(effort, "medium" | "high" | "maximum") {
+            return CommandResult::Error(format!(
+                "Invalid effort level: '{}'. Use: medium, high, or maximum",
+                effort
+            ));
+        }
+
+        CommandResult::Message(format!(
+            "🚀 Ultraplan activated with {} effort level\n\n\
+             Ultraplan will now:\n\
+             • Analyze the codebase and requirements\n\
+             • Use extended thinking for deep reasoning\n\
+             • Generate a comprehensive implementation plan\n\
+             • Break down the work into clear steps\n\n\
+             Ask me: '/ultraplan describe what you want to build'",
+            effort
+        ))
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 
@@ -995,6 +1041,7 @@ pub fn all_named_commands() -> Vec<Box<dyn NamedCommand>> {
         Box::new(InstallGithubAppCommand),
         Box::new(RemoteSetupCommand),
         Box::new(StickersCommand),
+        Box::new(UltraplanCommand),
     ]
 }
 

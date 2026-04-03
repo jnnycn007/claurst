@@ -7,6 +7,47 @@ edition.workspace = true
 # Enable real microphone capture for voice PTT mode.
 voice = ["cc-core/voice", "dep:cpal", "dep:hound"]
 
+# UI & Interaction features (pass-through from cc-core)
+token_budget = ["cc-core/token_budget"]
+ultraplan = ["cc-core/ultraplan"]
+ultrathink = ["cc-core/ultrathink"]
+history_picker = ["cc-core/history_picker"]
+message_actions = ["cc-core/message_actions"]
+quick_search = ["cc-core/quick_search"]
+away_summary = ["cc-core/away_summary"]
+hook_prompts = ["cc-core/hook_prompts"]
+kairos_brief = ["cc-core/kairos_brief"]
+kairos_channels = ["cc-core/kairos_channels"]
+lodestone = ["cc-core/lodestone"]
+
+# Agents & Memory features (pass-through from cc-core)
+agent_triggers = ["cc-core/agent_triggers"]
+agent_triggers_remote = ["cc-core/agent_triggers_remote"]
+extract_memories = ["cc-core/extract_memories"]
+verification_agent = ["cc-core/verification_agent"]
+builtin_explore_plan_agents = ["cc-core/builtin_explore_plan_agents"]
+cached_microcompact = ["cc-core/cached_microcompact"]
+compaction_reminders = ["cc-core/compaction_reminders"]
+agent_memory_snapshot = ["cc-core/agent_memory_snapshot"]
+teammem = ["cc-core/teammem"]
+
+# Tools & Infrastructure features (pass-through from cc-core)
+bash_classifier = ["cc-core/bash_classifier"]
+bridge_mode = ["cc-core/bridge_mode"]
+mcp_rich_output = ["cc-core/mcp_rich_output"]
+connector_text = ["cc-core/connector_text"]
+unattended_retry = ["cc-core/unattended_retry"]
+new_init = ["cc-core/new_init"]
+powershell_auto_mode = ["cc-core/powershell_auto_mode"]
+shot_stats = ["cc-core/shot_stats"]
+tree_sitter_bash = ["cc-core/tree_sitter_bash"]
+tree_sitter_bash_shadow = ["cc-core/tree_sitter_bash_shadow"]
+native_clipboard_image = ["cc-core/native_clipboard_image"]
+prompt_cache_break_detection = ["cc-core/prompt_cache_break_detection"]
+ccr_auto_connect = ["cc-core/ccr_auto_connect"]
+ccr_mirror = ["cc-core/ccr_mirror"]
+ccr_remote_setup = ["cc-core/ccr_remote_setup"]
+
 [dependencies]
 cc-core = { workspace = true }
 cc-api = { workspace = true }

@@ -2640,6 +2640,8 @@ pub mod keybindings;
 pub mod voice;
 pub mod analytics;
 pub mod lsp;
+pub mod session_tracing;
+pub mod context_collapse;
 pub mod team_memory_sync;
 pub mod system_prompt;
 pub mod memdir;

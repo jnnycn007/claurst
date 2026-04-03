@@ -3,6 +3,10 @@ name = "cc-commands"
 version.workspace = true
 edition.workspace = true
 
+[features]
+# Pass-through features from cc-core
+ultraplan = ["cc-core/ultraplan"]
+
 [dependencies]
 cc-core = { workspace = true }
 cc-api = { workspace = true }
